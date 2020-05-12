@@ -1,7 +1,7 @@
 package com.knoldus.demo
 
 import akka.actor.ActorSystem
-import akka.testkit.{ImplicitSender, TestActor, TestActorRef, TestKit}
+import akka.testkit.{ImplicitSender, TestActorRef, TestKit}
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
@@ -9,7 +9,6 @@ import akka.pattern.ask
 import akka.util.Timeout
 
 import scala.concurrent.duration._
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.Success
 
 class CounterSpec
