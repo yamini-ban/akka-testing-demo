@@ -1,22 +1,24 @@
 package com.knoldus.demo
 
 import akka.actor.ActorSystem
+import akka.pattern.ask
 import akka.testkit.{ImplicitSender, TestActorRef, TestKit}
+import akka.util.Timeout
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
-import akka.pattern.ask
-import akka.util.Timeout
 
 import scala.concurrent.duration._
 import scala.util.Success
 
 class CounterSpec
   extends TestKit(ActorSystem("TestCount"))
-  with ImplicitSender
-  with AnyWordSpecLike
-  with Matchers
-  with BeforeAndAfterAll {
+    with ImplicitSender
+    with AnyWordSpecLike
+    with Matchers
+    with BeforeAndAfterAll {
+
+  import Counter._
 
   override def afterAll: Unit = {
     TestKit.shutdownActorSystem(system)
@@ -31,7 +33,7 @@ class CounterSpec
 
     "return counter value if Display message is received" in {
       val counter = TestActorRef[Counter]
-      implicit val timeout:Timeout = 20.seconds
+      implicit val timeout: Timeout = 20.seconds
       val count = counter ? Display
       assert(count.isCompleted && count.value.contains(Success(0)))
     }
