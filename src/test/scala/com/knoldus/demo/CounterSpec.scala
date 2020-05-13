@@ -23,13 +23,13 @@ class CounterSpec
   }
 
   "A Counter actor" must {
-    "increment counter if Increment msg is received" in {
+    "increment counter if Increment message is received" in {
       val counter = TestActorRef[Counter]
       counter ! Increment
       counter.underlyingActor.counter shouldBe 1
     }
 
-    "return counter value if Display msg is received" in {
+    "return counter value if Display message is received" in {
       val counter = TestActorRef[Counter]
       implicit val timeout:Timeout = 20.seconds
       val count = counter ? Display
