@@ -1,18 +1,14 @@
 package com.knoldus.demo
 
 import akka.actor.ActorSystem
-import akka.pattern.ask
-import akka.testkit.{ImplicitSender, TestActorRef, TestKit}
-import akka.util.Timeout
+import akka.testkit.{EventFilter, ImplicitSender, TestActorRef, TestKit}
+import com.typesafe.config.ConfigFactory
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
 
-import scala.concurrent.duration._
-import scala.util.Success
-
 class CounterSpec
-  extends TestKit(ActorSystem("TestCount"))
+  extends TestKit(ActorSystem("TestCount", ConfigFactory.parseString("""akka.loggers = ["akka.testkit.TestEventListener"]""")))
     with ImplicitSender
     with AnyWordSpecLike
     with Matchers
@@ -24,18 +20,18 @@ class CounterSpec
     TestKit.shutdownActorSystem(system)
   }
 
-  "A Counter actor" must {
+  "A Counter actor" should {
     "increment counter if Increment message is received" in {
       val counter = TestActorRef[Counter]
       counter ! Increment
       counter.underlyingActor.counter shouldBe 1
     }
 
-    "return counter value if Display message is received" in {
+    "log counter value if Display message is received" in {
       val counter = TestActorRef[Counter]
-      implicit val timeout: Timeout = 20.seconds
-      val count = counter ? Display
-      assert(count.isCompleted && count.value.contains(Success(0)))
+      EventFilter.info(source = counter.path.toString, pattern = "0", occurrences = 1) intercept {
+        counter ! Display
+      }
     }
   }
 

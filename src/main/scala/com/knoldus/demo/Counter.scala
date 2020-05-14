@@ -22,6 +22,5 @@ class Counter extends Actor with ActorLogging {
     case Increment => counter = counter + 1
       log.info(counter.toString)
     case Display => log.info(counter.toString)
-      sender ! counter
   }
 }
